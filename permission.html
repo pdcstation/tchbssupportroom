@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>授權攝影機與麥克風</title>
+    <style>
+        body {
+            background-color: #222;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        #countdown {
+            font-size: 60px;
+            font-weight: bold;
+            color: #34C759;
+        }
+    </style>
+</head>
+<body>
+    <h1>請允許使用攝影機與麥克風</h1>
+    <p>授權完成後將自動進入會議</p>
+    <div id="countdown">等待授權...</div>
+
+    <script>
+        async function requestPermission() {
+            try {
+                // 要求授權
+                await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+
+                // 倒數 3 秒
+                let seconds = 3;
+                document.getElementById('countdown').innerText = seconds;
+                let timer = setInterval(() => {
+                    seconds--;
+                    document.getElementById('countdown').innerText = seconds;
+                    if (seconds <= 0) {
+                        clearInterval(timer);
+                        // 在同一個視窗載入 Jitsi（避免被關閉）
+                        location.replace('https://meet.jit.si/TCHBSSupportRoomLive#userInfo.displayName="注意"&config.prejoinPageEnabled=false&config.startWithAudioMuted=false&config.startWithVideoMuted=false');
+                    }
+                }, 1000);
+            } catch (err) {
+                alert('需要允許攝影機與麥克風才能進入會議');
+                window.close();
+            }
+        }
+        requestPermission();
+    </script>
+</body>
+</html>
